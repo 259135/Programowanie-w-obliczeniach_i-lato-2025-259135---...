@@ -12,33 +12,34 @@ krokX = 0.01
 krokY = 0.01
 krokZ = 0.01
 
+centrPoziom = [1, 1, 1]
+centrPion = [0, 0, 0]
+centrCyl = [-1, -1, -1]
+
 promienCylindra = 1
 krokAlfa = 1 #kąt kroku w stopniach
 iloscKrokowAlfa = int(360/krokAlfa)
 print(iloscKrokowAlfa)
 for j in range(0, iloscKrokowX - 1):
     for i in range(0, iloscKrokowY - 1):
-        punktyPoziomejPowierzchni.append([j * krokX, i * krokY, 0])
-        punktyPoziomejPowierzchni.append([-j * krokX, -i * krokY, 0])
-        punktyPoziomejPowierzchni.append([j * krokX, -i * krokY, 0])
-        punktyPoziomejPowierzchni.append([-j * krokX, i * krokY, 0])
+        punktyPoziomejPowierzchni.append([j * krokX + centrPoziom[0], i * krokY + centrPoziom[1], 0 + centrPoziom[2]])
+        punktyPoziomejPowierzchni.append([-j * krokX + centrPoziom[0], -i * krokY + centrPoziom[1], 0 + centrPoziom[2]])
+        punktyPoziomejPowierzchni.append([j * krokX + centrPoziom[0], -i * krokY + centrPoziom[1], 0 + centrPoziom[2]])
+        punktyPoziomejPowierzchni.append([-j * krokX + centrPoziom[0], i * krokY + centrPoziom[1], 0 + centrPoziom[2]])
 
 for j in range(0, iloscKrokowX - 1):
     for i in range(0, iloscKrokowZ - 1):
-        punktyPionowejPowierzchni.append([j * krokX, 0, i * krokZ])
-        punktyPionowejPowierzchni.append([-j * krokX, 0, -i * krokZ])
-        punktyPionowejPowierzchni.append([j * krokX, 0, -i * krokZ])
-        punktyPionowejPowierzchni.append([-j * krokX, 0, i * krokZ])
+        punktyPionowejPowierzchni.append([j * krokX + centrPion[0], centrPion[1], i * krokZ + centrPion[2]])
+        punktyPionowejPowierzchni.append([-j * krokX + centrPion[0], centrPion[1], -i * krokZ + centrPion[2]])
+        punktyPionowejPowierzchni.append([j * krokX + centrPion[0], centrPion[1], -i * krokZ + centrPion[2]])
+        punktyPionowejPowierzchni.append([-j * krokX + centrPion[0], centrPion[1], i * krokZ + centrPion[2]])
 
 for i in range(0, iloscKrokowAlfa):
-    for j in range(0, iloscKrokowZ - 1):
-        punktyCylindrycznejPowierzchni.append([promienCylindra * math.cos(math.radians(i * krokAlfa)), promienCylindra * math.sin(math.radians(i * krokAlfa)), j * krokZ])
-        punktyCylindrycznejPowierzchni.append([promienCylindra * math.cos(math.radians(i * krokAlfa)), promienCylindra * math.sin(math.radians(i * krokAlfa)), -j * krokZ])
+    for j in range(0, iloscKrokowZ):
+        punktyCylindrycznejPowierzchni.append([promienCylindra * math.cos(math.radians(i * krokAlfa)) + centrCyl[0], promienCylindra * math.sin(math.radians(i * krokAlfa)) + centrCyl[1], j * krokZ + centrCyl[2]])
+        punktyCylindrycznejPowierzchni.append([promienCylindra * math.cos(math.radians(i * krokAlfa)) + centrCyl[0], promienCylindra * math.sin(math.radians(i * krokAlfa)) + centrCyl[1], -j * krokZ + centrCyl[2]])
 
-#print(punktyPoziomejPowierzchni)
 sciezka = "C:\\Users\\ara22\\Desktop\\point.xyz"
-sciezka2 = "C:\\Users\\ara22\\Desktop\\point2.xyz"
-sciezka3 = "C:\\Users\\ara22\\Desktop\\point3.xyz"
 
 plik = open(sciezka, "w")
 for i in punktyPoziomejPowierzchni: #dodawaj poszczególne elementy listy do pliku
