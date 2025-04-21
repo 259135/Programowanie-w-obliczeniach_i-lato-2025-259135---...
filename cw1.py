@@ -12,9 +12,9 @@ krokX = 0.01
 krokY = 0.01
 krokZ = 0.01
 
-centrPoziom = [1, 1, 1]
+centrPoziom = [2, 2, 2]
 centrPion = [0, 0, 0]
-centrCyl = [-1, -1, -1]
+centrCyl = [-2, -2, -2]
 
 promienCylindra = 1
 krokAlfa = 1 #kąt kroku w stopniach
