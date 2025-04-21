@@ -23,21 +23,21 @@ iloscKrokowAlfa = int(360/krokAlfa)
 for j in range(0, iloscKrokowX - 1):
     for i in range(0, iloscKrokowY - 1):
         punktyPoziomejPowierzchni.append([j * krokX + centrPoziom[0], i * krokY + centrPoziom[1], 0 + centrPoziom[2]])
-        punktyPoziomejPowierzchni.append([-j * krokX + centrPoziom[0], -i * krokY + centrPoziom[1], 0 + centrPoziom[2]])
-        punktyPoziomejPowierzchni.append([j * krokX + centrPoziom[0], -i * krokY + centrPoziom[1], 0 + centrPoziom[2]])
-        punktyPoziomejPowierzchni.append([-j * krokX + centrPoziom[0], i * krokY + centrPoziom[1], 0 + centrPoziom[2]])
+        #punktyPoziomejPowierzchni.append([-j * krokX + centrPoziom[0], -i * krokY + centrPoziom[1], 0 + centrPoziom[2]])
+        #punktyPoziomejPowierzchni.append([j * krokX + centrPoziom[0], -i * krokY + centrPoziom[1], 0 + centrPoziom[2]])
+        #punktyPoziomejPowierzchni.append([-j * krokX + centrPoziom[0], i * krokY + centrPoziom[1], 0 + centrPoziom[2]])
 
 for j in range(0, iloscKrokowX - 1):
     for i in range(0, iloscKrokowZ - 1):
         punktyPionowejPowierzchni.append([j * krokX + centrPion[0], centrPion[1], i * krokZ + centrPion[2]])
-        punktyPionowejPowierzchni.append([-j * krokX + centrPion[0], centrPion[1], -i * krokZ + centrPion[2]])
-        punktyPionowejPowierzchni.append([j * krokX + centrPion[0], centrPion[1], -i * krokZ + centrPion[2]])
-        punktyPionowejPowierzchni.append([-j * krokX + centrPion[0], centrPion[1], i * krokZ + centrPion[2]])
+        #punktyPionowejPowierzchni.append([-j * krokX + centrPion[0], centrPion[1], -i * krokZ + centrPion[2]])
+        #punktyPionowejPowierzchni.append([j * krokX + centrPion[0], centrPion[1], -i * krokZ + centrPion[2]])
+        #punktyPionowejPowierzchni.append([-j * krokX + centrPion[0], centrPion[1], i * krokZ + centrPion[2]])
 
 for i in range(0, iloscKrokowAlfa):
     for j in range(0, iloscKrokowZ):
         punktyCylindrycznejPowierzchni.append([promienCylindra * math.cos(math.radians(i * krokAlfa)) + centrCyl[0], promienCylindra * math.sin(math.radians(i * krokAlfa)) + centrCyl[1], j * krokZ + centrCyl[2]])
-        punktyCylindrycznejPowierzchni.append([promienCylindra * math.cos(math.radians(i * krokAlfa)) + centrCyl[0], promienCylindra * math.sin(math.radians(i * krokAlfa)) + centrCyl[1], -j * krokZ + centrCyl[2]])
+        #punktyCylindrycznejPowierzchni.append([promienCylindra * math.cos(math.radians(i * krokAlfa)) + centrCyl[0], promienCylindra * math.sin(math.radians(i * krokAlfa)) + centrCyl[1], -j * krokZ + centrCyl[2]])
 
 sciezka = input("Podaj ścieżkę do zapisu...")
 

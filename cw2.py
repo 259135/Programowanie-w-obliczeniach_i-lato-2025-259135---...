@@ -1,7 +1,9 @@
 import csv
 import math
+import scipy
 import numpy as np
 import pyransac3d
+import matplotlib.pyplot as plt
 from numpy.random import default_rng
 rng = default_rng()
 
@@ -28,8 +30,13 @@ def ransac(dane, k, t, d):
             if d < t:
                 zaakceptowane_bliskie.append(l)
         if len(zaakceptowane_bliskie) > d:
-            
-
+            aktualne_dopasowanie = 0 #modelowanie płaszczyzny dopasowanej do wszystkich punktów z zaakcpeptowane_bliskie
+            aktualny_blad = 0   #określanie błędu
+            if aktualny_blad < najlepszy_blad:
+                najlepszy_blad = aktualny_blad
+                najlepsze_dopasowanie = aktualne_dopasowanie
+        iteracja = iteracja + 1
+    return najlepsze_dopasowanie
 
 sciezka1 = "C:\\Users\\ara22\\Desktop\\point_cl1.xyz"
 sciezka2 = "C:\\Users\\ara22\\Desktop\\point_cl2.xyz"
@@ -59,6 +66,9 @@ k1Punkty = pArray[klaster1]
 k2Punkty = pArray[klaster2]
 k3Punkty = pArray[klaster3]
 
+#A = k1Punkty.T
+#print(A)
+
 plik1 = open(sciezka1, "w")
 for i in range(0,len(k1Punkty)): #dodawaj poszczególne elementy listy do pliku
     plik1.write(str(k1Punkty[i][0]) + " " + str(k1Punkty[i][1]) + " " + str(k1Punkty[i][2]) + "\n")
@@ -74,4 +84,33 @@ for i in range(0,len(k3Punkty)): #dodawaj poszczególne elementy listy do pliku
     plik3.write(str(k3Punkty[i][0]) + " " + str(k3Punkty[i][1]) + " " + str(k3Punkty[i][2]) + "\n")
 plik3.close()
 
+x = np.array(k2Punkty[:,0])
+y = np.array(k2Punkty[:,1])
+z = np.array(k2Punkty[:,2])
 
+#A = np.vstack([x, y, np.ones(len(x))]).T
+#print(A)
+data = np.c_[x,y,z]
+A = np.c_[data[:,0], data[:,1], np.ones(data.shape[0])]
+C,_,_,_ = scipy.linalg.lstsq(A, data[:,2])
+mn = np.min(data, axis=0)
+mx = np.max(data, axis=0)
+X, Y = np.meshgrid(np.linspace(0,1, 20), np.linspace(0,1, 20))
+print(X)
+Z = C[0]*X + C[1]*Y + C[2]
+
+print(C)
+#pinv = np.linalg.pinv(A)
+#alpha = pinv.dot(z)
+#print(alpha)
+
+fig = plt.figure()
+ax = fig.add_subplot(projection='3d')
+ax.plot_surface(X, Y, Z)
+ax.scatter(x, y, z, c='r', s=5)
+plt.xlabel('X')
+plt.ylabel('Y')
+ax.set_zlabel('Z')
+ax.axis('equal')
+ax.axis('tight')
+plt.show()
