@@ -39,7 +39,7 @@ for i in range(0, iloscKrokowAlfa):
         punktyCylindrycznejPowierzchni.append([promienCylindra * math.cos(math.radians(i * krokAlfa)) + centrCyl[0], promienCylindra * math.sin(math.radians(i * krokAlfa)) + centrCyl[1], j * krokZ + centrCyl[2]])
         punktyCylindrycznejPowierzchni.append([promienCylindra * math.cos(math.radians(i * krokAlfa)) + centrCyl[0], promienCylindra * math.sin(math.radians(i * krokAlfa)) + centrCyl[1], -j * krokZ + centrCyl[2]])
 
-sciezka = "C:\\Users\\ara22\\Desktop\\point.xyz"
+sciezka = input("Podaj ścieżkę do zapisu...")
 
 wszystkiePunkty = []
 wszystkiePunkty.extend(punktyPoziomejPowierzchni)
