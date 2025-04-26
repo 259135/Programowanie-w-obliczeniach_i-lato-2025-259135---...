@@ -37,8 +37,16 @@ def ransac(dane, k, t, d):
                 najlepszy_blad = aktualny_blad
                 najlepsze_dopasowanie = aktualne_dopasowanie
         iteracja = iteracja + 1
-    return najlepsze_dopasowanie, najlepszy_blad
+    if najlepszy_blad == math.inf:
+        czy_plaszczyzna = "nie"
+    else:
+        czy_plaszczyzna = "tak"
 
+    if najlepsze_dopasowanie is not None:
+        najlepsze_dopasowanie=najlepsze_dopasowanie / np.linalg.norm(najlepsze_dopasowanie)
+    return najlepsze_dopasowanie, najlepszy_blad, czy_plaszczyzna
+
+print("Ładowanie danych")
 sciezka1 = "C:\\Users\\ara22\\Desktop\\point_cl1.xyz"
 sciezka2 = "C:\\Users\\ara22\\Desktop\\point_cl2.xyz"
 sciezka3 = "C:\\Users\\ara22\\Desktop\\point_cl3.xyz"
@@ -55,7 +63,8 @@ with open("C:\\Users\\ara22\\Desktop\\point.xyz", newline='\n') as plik:
         pt.append(float(row[2]))
         punkty.append(pt)
 
-clusterer = KMeans(n_clusters=3, init=[[-1.2,-1.2,-1.2],[0,0,0],[1.2,1.2,1.2]])
+print("Klasteryzacja danych")
+clusterer = KMeans(n_clusters=3)#, init=[[-1.2,-1.2,-1.2],[0,0,0],[1.2,1.2,1.2]])
 pArray = np.array(punkty)
 y = clusterer.fit_predict(pArray)
 
@@ -67,6 +76,7 @@ k1Punkty = pArray[klaster1]
 k2Punkty = pArray[klaster2]
 k3Punkty = pArray[klaster3]
 
+print("Zapis danych klastrów")
 plik1 = open(sciezka1, "w")
 for i in range(0,len(k1Punkty)): #dodawaj poszczególne elementy listy do pliku
     plik1.write(str(k1Punkty[i][0]) + " " + str(k1Punkty[i][1]) + " " + str(k1Punkty[i][2]) + "\n")
@@ -82,11 +92,45 @@ for i in range(0,len(k3Punkty)): #dodawaj poszczególne elementy listy do pliku
     plik3.write(str(k3Punkty[i][0]) + " " + str(k3Punkty[i][1]) + " " + str(k3Punkty[i][2]) + "\n")
 plik3.close()
 
-nd1,nb1 = ransac(k1Punkty,1000,0.1,0.7*len(k1Punkty))
-nd2,nb2 = ransac(k2Punkty,1000,0.1,0.7*len(k2Punkty))
-nd3,nb3 = ransac(k3Punkty,1000,0.1,0.7*len(k3Punkty))
+print("Analiza klastrów\n")
+print("Analiza 1. klastra...")
+nd1,nb1,czy1 = ransac(k1Punkty,200,0.1,0.7*len(k1Punkty))
 
-print("Analiza klastrów:\n\n")
-print("Klaster nr 1:\n")
-print("Wektor normalny: " + str(nd1) + "\n")
-print("Czy to płaszczyzna: " + str(czy1))
+print("Klaster nr 1:")
+print("Wektor normalny: " + str(nd1))
+print("Czy to płaszczyzna: " + czy1)
+if czy1 =="tak":
+    print("Średnia odległość punktu od płaszczyzny: " + str(nb1))
+    if abs(nd1[0])<0.1 and abs(nd1[1])<0.1 and abs(nd1[2])>0.9:
+        print("Ta płaszczyzna jest pozioma.")
+    elif abs(nd1[2])<0.1 and (bool(abs(nd1[1])>0.9) ^ bool(abs(nd1[0])>0.9)):
+        print("Ta płaszczyzna jest pionowa.")
+
+print("")
+
+print("Analiza 2. klastra...")
+nd2,nb2,czy2 = ransac(k2Punkty,200,0.1,0.7*len(k2Punkty))
+
+print("Klaster nr 2:")
+print("Wektor normalny: " + str(nd2))
+print("Czy to płaszczyzna: " + czy2)
+if czy2 =="tak":
+    print("Średnia odległość punktu od płaszczyzny: " + str(nb2))
+    if abs(nd2[0])<0.1 and abs(nd2[1])<0.1 and abs(nd2[2])>0.9:
+        print("Ta płaszczyzna jest pozioma.")
+    elif abs(nd2[2])<0.1 and (bool(abs(nd2[1])>0.9) ^ bool(abs(nd2[0])>0.9)):
+        print("Ta płaszczyzna jest pionowa.")
+print("")
+
+print("Analiza 3. klastra...")
+nd3,nb3,czy3 = ransac(k3Punkty,200,0.1,0.7*len(k3Punkty))
+print("Klaster nr 3:")
+print("Wektor normalny: " + str(nd3))
+print("Czy to płaszczyzna: " + czy3)
+if czy3 =="tak":
+    print("Średnia odległość punktu od płaszczyzny: " + str(nb3))
+    if abs(nd3[0])<0.1 and abs(nd3[1])<0.1 and abs(nd3[2])>0.9:
+        print("Ta płaszczyzna jest pozioma.")
+    elif abs(nd3[2])<0.1 and (bool(abs(nd3[1])>0.9) ^ bool(abs(nd3[0])>0.9)):
+        print("Ta płaszczyzna jest pionowa.")
+
