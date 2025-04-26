@@ -1,4 +1,6 @@
 import math
+from numpy.random import default_rng
+rng = default_rng()
 
 punktyPoziomejPowierzchni=[]
 punktyPionowejPowierzchni=[]
@@ -12,9 +14,11 @@ krokX = 0.01
 krokY = 0.01
 krokZ = 0.01
 
-centrPoziom = [2, 2, 2]
+centrPoziom = [1.2, 1.2, 1.2]
 centrPion = [0, 0, 0]
-centrCyl = [-2, -2, -2]
+centrCyl = [-1.2, -1.2, -1.2]
+
+na = 0.03 #amplituda szumu
 
 promienCylindra = 1
 krokAlfa = 1 #kąt kroku w stopniach
@@ -22,21 +26,21 @@ iloscKrokowAlfa = int(360/krokAlfa)
 
 for j in range(0, iloscKrokowX - 1):
     for i in range(0, iloscKrokowY - 1):
-        punktyPoziomejPowierzchni.append([j * krokX + centrPoziom[0], i * krokY + centrPoziom[1], 0 + centrPoziom[2]])
+        punktyPoziomejPowierzchni.append([j * krokX + centrPoziom[0] + rng.normal(0,na), i * krokY + centrPoziom[1] + rng.normal(0,na), 0 + centrPoziom[2] + rng.normal(0,na)])
         #punktyPoziomejPowierzchni.append([-j * krokX + centrPoziom[0], -i * krokY + centrPoziom[1], 0 + centrPoziom[2]])
         #punktyPoziomejPowierzchni.append([j * krokX + centrPoziom[0], -i * krokY + centrPoziom[1], 0 + centrPoziom[2]])
         #punktyPoziomejPowierzchni.append([-j * krokX + centrPoziom[0], i * krokY + centrPoziom[1], 0 + centrPoziom[2]])
 
 for j in range(0, iloscKrokowX - 1):
     for i in range(0, iloscKrokowZ - 1):
-        punktyPionowejPowierzchni.append([j * krokX + centrPion[0], centrPion[1], i * krokZ + centrPion[2]])
+        punktyPionowejPowierzchni.append([j * krokX + centrPion[0] + rng.normal(0,na), centrPion[1] + rng.normal(0,na), i * krokZ + centrPion[2] + rng.normal(0,na)])
         #punktyPionowejPowierzchni.append([-j * krokX + centrPion[0], centrPion[1], -i * krokZ + centrPion[2]])
         #punktyPionowejPowierzchni.append([j * krokX + centrPion[0], centrPion[1], -i * krokZ + centrPion[2]])
         #punktyPionowejPowierzchni.append([-j * krokX + centrPion[0], centrPion[1], i * krokZ + centrPion[2]])
 
 for i in range(0, iloscKrokowAlfa):
     for j in range(0, iloscKrokowZ):
-        punktyCylindrycznejPowierzchni.append([promienCylindra * math.cos(math.radians(i * krokAlfa)) + centrCyl[0], promienCylindra * math.sin(math.radians(i * krokAlfa)) + centrCyl[1], j * krokZ + centrCyl[2]])
+        punktyCylindrycznejPowierzchni.append([promienCylindra * math.cos(math.radians(i * krokAlfa)) + centrCyl[0] + rng.normal(0,na), promienCylindra * math.sin(math.radians(i * krokAlfa)) + centrCyl[1] + rng.normal(0,na), j * krokZ + centrCyl[2] + rng.normal(0,na)])
         #punktyCylindrycznejPowierzchni.append([promienCylindra * math.cos(math.radians(i * krokAlfa)) + centrCyl[0], promienCylindra * math.sin(math.radians(i * krokAlfa)) + centrCyl[1], -j * krokZ + centrCyl[2]])
 
 sciezka = input("Podaj ścieżkę do zapisu...")
