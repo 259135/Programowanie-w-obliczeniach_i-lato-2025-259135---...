@@ -13,6 +13,7 @@ def ransac(dane, k, t, d):
     najlepsze_dopasowanie = None
     najlepszy_blad = math.inf
     while iteracja<k :
+        print("Iteracja " + str(iteracja) + " z " + str(k))
         wp = rng.permutation(dane)[0:3] #Wybrane Punkty
         a = [wp[1][0] - wp[0][0], wp[1][1] - wp[0][1], wp[1][2] - wp[0][2]]
         b = [wp[2][0] - wp[0][0], wp[2][1] - wp[0][1], wp[2][2] - wp[0][2]]
@@ -22,14 +23,18 @@ def ransac(dane, k, t, d):
         C = a[0] * b[1] - a[1] * b[0]
         D = -A * wp[0][0] - B * wp[0][1] - C * wp[0][2]
         axb = [A, B, C]
+        norma=math.sqrt(pow(A, 2) + pow(B, 2) + pow(C, 2))
+        dane_pozostale = []
 
         zaakceptowane_bliskie = []
         odleglosci_punktow_zaakceptowanych = []
         for l in dane:
-            dd = abs(A * l[0] + B * l[1] + C * l[2] + D)/math.sqrt(pow(A, 2) + pow(B, 2) + pow(C, 2))
+            dd = abs(A * l[0] + B * l[1] + C * l[2] + D)/norma
             if dd < t:
                 zaakceptowane_bliskie.append(l)
                 odleglosci_punktow_zaakceptowanych.append(dd)
+            else:
+                dane_pozostale.append(l)
         if len(zaakceptowane_bliskie) > d:
             aktualne_dopasowanie = axb
             aktualny_blad = np.mean(odleglosci_punktow_zaakceptowanych)   #określanie błędu
@@ -44,7 +49,7 @@ def ransac(dane, k, t, d):
 
     if najlepsze_dopasowanie is not None:
         najlepsze_dopasowanie=najlepsze_dopasowanie / np.linalg.norm(najlepsze_dopasowanie)
-    return najlepsze_dopasowanie, najlepszy_blad, czy_plaszczyzna
+    return najlepsze_dopasowanie, najlepszy_blad, czy_plaszczyzna, dane_pozostale, zaakceptowane_bliskie
 
 print("Ładowanie danych")
 sciezka1 = "C:\\Users\\ara22\\Desktop\\point_cl1.xyz"
@@ -94,7 +99,7 @@ plik3.close()
 
 print("Analiza klastrów\n")
 print("Analiza 1. klastra...")
-nd1,nb1,czy1 = ransac(k1Punkty,200,0.1,0.7*len(k1Punkty))
+nd1,nb1,czy1,_,_ = ransac(k1Punkty,200,0.1,0.7*len(k1Punkty))
 
 print("Klaster nr 1:")
 print("Wektor normalny: " + str(nd1))
@@ -103,13 +108,13 @@ if czy1 =="tak":
     print("Średnia odległość punktu od płaszczyzny: " + str(nb1))
     if abs(nd1[0])<0.1 and abs(nd1[1])<0.1 and abs(nd1[2])>0.9:
         print("Ta płaszczyzna jest pozioma.")
-    elif abs(nd1[2])<0.1 and (bool(abs(nd1[1])>0.9) ^ bool(abs(nd1[0])>0.9)):
+    elif abs(nd1[2])<0.1:
         print("Ta płaszczyzna jest pionowa.")
 
 print("")
 
 print("Analiza 2. klastra...")
-nd2,nb2,czy2 = ransac(k2Punkty,200,0.1,0.7*len(k2Punkty))
+nd2,nb2,czy2,_,_ = ransac(k2Punkty,200,0.1,0.7*len(k2Punkty))
 
 print("Klaster nr 2:")
 print("Wektor normalny: " + str(nd2))
@@ -118,12 +123,12 @@ if czy2 =="tak":
     print("Średnia odległość punktu od płaszczyzny: " + str(nb2))
     if abs(nd2[0])<0.1 and abs(nd2[1])<0.1 and abs(nd2[2])>0.9:
         print("Ta płaszczyzna jest pozioma.")
-    elif abs(nd2[2])<0.1 and (bool(abs(nd2[1])>0.9) ^ bool(abs(nd2[0])>0.9)):
+    elif abs(nd2[2])<0.1:
         print("Ta płaszczyzna jest pionowa.")
 print("")
 
 print("Analiza 3. klastra...")
-nd3,nb3,czy3 = ransac(k3Punkty,200,0.1,0.7*len(k3Punkty))
+nd3,nb3,czy3,_,_ = ransac(k3Punkty,200,0.1,0.7*len(k3Punkty))
 print("Klaster nr 3:")
 print("Wektor normalny: " + str(nd3))
 print("Czy to płaszczyzna: " + czy3)
@@ -131,6 +136,62 @@ if czy3 =="tak":
     print("Średnia odległość punktu od płaszczyzny: " + str(nb3))
     if abs(nd3[0])<0.1 and abs(nd3[1])<0.1 and abs(nd3[2])>0.9:
         print("Ta płaszczyzna jest pozioma.")
-    elif abs(nd3[2])<0.1 and (bool(abs(nd3[1])>0.9) ^ bool(abs(nd3[0])>0.9)):
+    elif abs(nd3[2])<0.1:
         print("Ta płaszczyzna jest pionowa.")
 
+
+punkty = []
+
+with open("C:\\Users\\ara22\\Desktop\\conferenceRoom_1.txt", newline='\n') as plik:
+    csvPunkty = csv.reader(plik, delimiter=' ')
+    for row in csvPunkty:
+        #print(float(row))
+        pt = []
+        pt.append(float(row[0]))
+        pt.append(float(row[1]))
+        pt.append(float(row[2]))
+        punkty.append(pt)
+
+pArray = np.array(punkty)
+print("Ściana 1.")
+_, _, _, dp, zb1 = ransac(pArray,20,0.05,1/8*len(pArray))
+print("Ściana 2.")
+_, _, _, dp, zb2 = ransac(dp,20,0.05,1/7*len(dp))
+print("Ściana 3.")
+_, _, _, dp, zb3 = ransac(dp,20,0.05,1/6*len(dp))
+print("Ściana 4.")
+_, _, _, dp, zb4 = ransac(dp,20,0.05,1/5*len(dp))
+print("Ściana 5.")
+_, _, _, dp, zb5 = ransac(dp,20,0.05,1/4*len(dp))
+print("Ściana 6.")
+_, _, _, dp, zb6 = ransac(dp,20,0.05,1/3*len(dp))
+pyransac3d.plane
+plik1 = open("C:\\Users\\ara22\\Desktop\\k1.xyz", "w")
+for i in range(0,len(zb1)): #dodawaj poszczególne elementy listy do pliku
+    plik1.write(str(zb1[i][0]) + " " + str(zb1[i][1]) + " " + str(zb1[i][2]) + "\n")
+plik1.close()
+
+plik1 = open("C:\\Users\\ara22\\Desktop\\k2.xyz", "w")
+for i in range(0,len(zb2)): #dodawaj poszczególne elementy listy do pliku
+    plik1.write(str(zb2[i][0]) + " " + str(zb2[i][1]) + " " + str(zb2[i][2]) + "\n")
+plik1.close()
+
+plik1 = open("C:\\Users\\ara22\\Desktop\\k3.xyz", "w")
+for i in range(0,len(zb3)): #dodawaj poszczególne elementy listy do pliku
+    plik1.write(str(zb3[i][0]) + " " + str(zb3[i][1]) + " " + str(zb3[i][2]) + "\n")
+plik1.close()
+
+plik1 = open("C:\\Users\\ara22\\Desktop\\k4.xyz", "w")
+for i in range(0,len(zb4)): #dodawaj poszczególne elementy listy do pliku
+    plik1.write(str(zb4[i][0]) + " " + str(zb4[i][1]) + " " + str(zb4[i][2]) + "\n")
+plik1.close()
+
+plik1 = open("C:\\Users\\ara22\\Desktop\\k5.xyz", "w")
+for i in range(0,len(zb5)): #dodawaj poszczególne elementy listy do pliku
+    plik1.write(str(zb5[i][0]) + " " + str(zb5[i][1]) + " " + str(zb5[i][2]) + "\n")
+plik1.close()
+
+plik1 = open("C:\\Users\\ara22\\Desktop\\k6.xyz", "w")
+for i in range(0,len(zb6)): #dodawaj poszczególne elementy listy do pliku
+    plik1.write(str(zb6[i][0]) + " " + str(zb6[i][1]) + " " + str(zb6[i][2]) + "\n")
+plik1.close()
