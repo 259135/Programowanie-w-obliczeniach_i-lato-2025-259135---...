@@ -6,6 +6,8 @@ import pyransac3d
 from sklearn.cluster import KMeans
 from numpy.random import default_rng
 
+
+
 rng = default_rng()
 
 def ransac(dane, k, t, d):
@@ -153,45 +155,69 @@ with open("C:\\Users\\ara22\\Desktop\\conferenceRoom_1.txt", newline='\n') as pl
         punkty.append(pt)
 
 pArray = np.array(punkty)
-print("Ściana 1.")
-_, _, _, dp, zb1 = ransac(pArray,20,0.05,1/8*len(pArray))
-print("Ściana 2.")
-_, _, _, dp, zb2 = ransac(dp,20,0.05,1/7*len(dp))
-print("Ściana 3.")
-_, _, _, dp, zb3 = ransac(dp,20,0.05,1/6*len(dp))
-print("Ściana 4.")
-_, _, _, dp, zb4 = ransac(dp,20,0.05,1/5*len(dp))
-print("Ściana 5.")
-_, _, _, dp, zb5 = ransac(dp,20,0.05,1/4*len(dp))
-print("Ściana 6.")
-_, _, _, dp, zb6 = ransac(dp,20,0.05,1/3*len(dp))
-pyransac3d.plane
+
+ransac3d = pyransac3d.Plane()
+be1,zb1 = ransac3d.fit(pArray,thresh=0.08, minPoints=100000, maxIteration=200)
+
 plik1 = open("C:\\Users\\ara22\\Desktop\\k1.xyz", "w")
-for i in range(0,len(zb1)): #dodawaj poszczególne elementy listy do pliku
-    plik1.write(str(zb1[i][0]) + " " + str(zb1[i][1]) + " " + str(zb1[i][2]) + "\n")
+for i in zb1: #dodawaj poszczególne elementy listy do pliku
+    plik1.write(str(pArray[i][0]) + " " + str(pArray[i][1]) + " " + str(pArray[i][2]) + "\n")
 plik1.close()
+
+pArray = np.delete(pArray,zb1,axis=0)
+print("1")
+print(str(be1))
+
+be2,zb2 = ransac3d.fit(pArray,thresh=0.08, minPoints=100000, maxIteration=200)
 
 plik1 = open("C:\\Users\\ara22\\Desktop\\k2.xyz", "w")
-for i in range(0,len(zb2)): #dodawaj poszczególne elementy listy do pliku
-    plik1.write(str(zb2[i][0]) + " " + str(zb2[i][1]) + " " + str(zb2[i][2]) + "\n")
+for i in zb2: #dodawaj poszczególne elementy listy do pliku
+    plik1.write(str(pArray[i][0]) + " " + str(pArray[i][1]) + " " + str(pArray[i][2]) + "\n")
 plik1.close()
+
+pArray = np.delete(pArray,zb2,axis=0)
+print("2")
+print(str(be2))
+
+be3,zb3 = ransac3d.fit(pArray,thresh=0.08, minPoints=100000, maxIteration=200)
 
 plik1 = open("C:\\Users\\ara22\\Desktop\\k3.xyz", "w")
-for i in range(0,len(zb3)): #dodawaj poszczególne elementy listy do pliku
-    plik1.write(str(zb3[i][0]) + " " + str(zb3[i][1]) + " " + str(zb3[i][2]) + "\n")
+for i in zb3: #dodawaj poszczególne elementy listy do pliku
+    plik1.write(str(pArray[i][0]) + " " + str(pArray[i][1]) + " " + str(pArray[i][2]) + "\n")
 plik1.close()
+
+pArray = np.delete(pArray,zb3,axis=0)
+print("3")
+print(str(be3))
+
+be4,zb4 = ransac3d.fit(pArray,thresh=0.08, minPoints=100000, maxIteration=200)
 
 plik1 = open("C:\\Users\\ara22\\Desktop\\k4.xyz", "w")
-for i in range(0,len(zb4)): #dodawaj poszczególne elementy listy do pliku
-    plik1.write(str(zb4[i][0]) + " " + str(zb4[i][1]) + " " + str(zb4[i][2]) + "\n")
+for i in zb4: #dodawaj poszczególne elementy listy do pliku
+    plik1.write(str(pArray[i][0]) + " " + str(pArray[i][1]) + " " + str(pArray[i][2]) + "\n")
 plik1.close()
+
+pArray = np.delete(pArray,zb4,axis=0)
+print("4")
+print(str(be4))
+
+be5,zb5 = ransac3d.fit(pArray,thresh=0.08, minPoints=100000, maxIteration=200)
 
 plik1 = open("C:\\Users\\ara22\\Desktop\\k5.xyz", "w")
-for i in range(0,len(zb5)): #dodawaj poszczególne elementy listy do pliku
-    plik1.write(str(zb5[i][0]) + " " + str(zb5[i][1]) + " " + str(zb5[i][2]) + "\n")
+for i in zb5: #dodawaj poszczególne elementy listy do pliku
+    plik1.write(str(pArray[i][0]) + " " + str(pArray[i][1]) + " " + str(pArray[i][2]) + "\n")
 plik1.close()
 
+pArray = np.delete(pArray,zb5,axis=0)
+print("5")
+print(str(be5))
+
+be6,zb6 = ransac3d.fit(pArray,thresh=0.08, minPoints=100000, maxIteration=200)
+
 plik1 = open("C:\\Users\\ara22\\Desktop\\k6.xyz", "w")
-for i in range(0,len(zb6)): #dodawaj poszczególne elementy listy do pliku
-    plik1.write(str(zb6[i][0]) + " " + str(zb6[i][1]) + " " + str(zb6[i][2]) + "\n")
+for i in zb6: #dodawaj poszczególne elementy listy do pliku
+    plik1.write(str(pArray[i][0]) + " " + str(pArray[i][1]) + " " + str(pArray[i][2]) + "\n")
 plik1.close()
+
+print("6")
+print(str(be6))
