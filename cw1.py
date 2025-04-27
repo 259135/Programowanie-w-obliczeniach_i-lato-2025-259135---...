@@ -2,6 +2,8 @@ import math
 from numpy.random import default_rng
 rng = default_rng()
 
+print("Skrypt realizujący zadanie 1. Autor: 259135")
+print("Tworzenie oraz zapis chmur punktów: płaszczyzny pionowej i poziomej oraz cylindrycznej.")
 #tablice danych
 punktyPoziomejPowierzchni=[]
 punktyPionowejPowierzchni=[]

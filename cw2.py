@@ -7,6 +7,8 @@ from sklearn.cluster import KMeans
 from numpy.random import default_rng
 rng = default_rng()
 
+print("Skrypt realizujący pierwszą część zadania 2. Autor: 259135")
+print("Implenentacja algorytmu RANSAC, klasteryzacja danych metodą k-średnich, dopasowanie płaszczyzn zaimplementowanym algorytmem.")
 #Definicja funkcji implementującej algorytm RANSAC
 
 #dane - tablica np.array z trójwymiarowymi danymi punktów chmury
@@ -65,8 +67,8 @@ def ransac(dane, k, t, d):
 
 print("Ładowanie danych")
 punkty = []
-sciezkaIn = input("Podaj ścieżkę odczytu chmury punktów, zawierającą trzy zadane obiekty")
-with open("C:\\Users\\ara22\\Desktop\\point.xyz", newline='\n') as plik:
+sciezkaIn = input("Podaj ścieżkę odczytu chmury punktów, zawierającą trzy zadane obiekty...")
+with open(sciezkaIn, newline='\n') as plik:
     csvPunkty = csv.reader(plik, delimiter=' ')
     for row in csvPunkty:
         #formowanie tablicy punktów trójwymiarowych
@@ -90,8 +92,14 @@ k1Punkty = pArray[klaster1]
 k2Punkty = pArray[klaster2]
 k3Punkty = pArray[klaster3]
 
+#tablica klastrów wykorzystywana przy iteracji
+klastry = []
+klastry.append(k1Punkty)
+klastry.append(k2Punkty)
+klastry.append(k3Punkty)
+
 print("Zapis danych klastrów")
-sciezka = input("Podaj katalog do zapisu plików klastrów. Zakończ ścieżkę ukośnikiem")
+sciezka = input("Podaj katalog do zapisu plików klastrów. Zakończ ścieżkę ukośnikiem...")
 sciezka1 = sciezka + "point_cl1.xyz"
 sciezka2 = sciezka + "point_cl2.xyz"
 sciezka3 = sciezka + "point_cl3.xyz"
@@ -110,45 +118,23 @@ plik3 = open(sciezka3, "w")
 for i in range(0,len(k3Punkty)): #dodawaj poszczególne elementy listy do pliku
     plik3.write(str(k3Punkty[i][0]) + " " + str(k3Punkty[i][1]) + " " + str(k3Punkty[i][2]) + "\n")
 plik3.close()
+print("Poszczególne klastry zapisano do: " + sciezka1 + ", " + sciezka2 + " i " + sciezka3)
 
-print("Analiza klastrów\n")
-print("Analiza 1. klastra...")
-nd1,nb1,czy1,_,_ = ransac(k1Punkty,200,0.1,0.7*len(k1Punkty))
+#analiza klastrów
+for f in range(1,4):
+    print("Analiza " + str(f) + ". klastra...")
+    nd, nb, czy, _, _ = ransac(klastry[f-1], 200, 0.1, 0.7 * len(klastry[f-1])) #200 iteracji, max. odległość=0.1 (grubość ścian z szumem to 0.2), 70% punktów płaszczyzny musi być określonych jako "bliskie"
+    print("Klaster nr " + str(f) + ":")
+    if str(nd) == "None": #Funkcja zwraca None, gdy żadna badana płaszczyzna nie spełniła wymagań
+        print("Fiasko dopasowania.")
+    else:
+        print("Wektor normalny: " + str(nd))
+    print("Czy to płaszczyzna: " + czy)
+    if czy =="tak":
+        print("Średnia odległość punktu od płaszczyzny: " + str(nb))
+        if abs(nd[0])<0.1 and abs(nd[1])<0.1 and abs(nd[2])>0.9: #jeśli tylko składowa C wektora normalnego ma wartość bliską +-1, to ta płaszczyzna jest pozioma
+            print("Ta płaszczyzna jest pozioma.")
+        elif abs(nd[2])<0.1: #jeśli składowa C jest bliska zeru, to przy dowolnych wartościach składowych A i B ta płaszczyzna jest pionowa
+            print("Ta płaszczyzna jest pionowa.")
 
-print("Klaster nr 1:")
-print("Wektor normalny: " + str(nd1))
-print("Czy to płaszczyzna: " + czy1)
-if czy1 =="tak":
-    print("Średnia odległość punktu od płaszczyzny: " + str(nb1))
-    if abs(nd1[0])<0.1 and abs(nd1[1])<0.1 and abs(nd1[2])>0.9: #jeśli tylko składowa C wektora normalnego ma wartość bliską +-1, to ta płaszczyzna jest pozioma
-        print("Ta płaszczyzna jest pozioma.")
-    elif abs(nd1[2])<0.1: #jeśli składowa C jest bliska zeru, to przy dowolnych wartościach składowych A i B ta płaszczyzna jest pionowa
-        print("Ta płaszczyzna jest pionowa.")
-
-print("")
-
-print("Analiza 2. klastra...")
-nd2,nb2,czy2,_,_ = ransac(k2Punkty,200,0.1,0.7*len(k2Punkty))
-
-print("Klaster nr 2:")
-print("Wektor normalny: " + str(nd2))
-print("Czy to płaszczyzna: " + czy2)
-if czy2 =="tak":
-    print("Średnia odległość punktu od płaszczyzny: " + str(nb2))
-    if abs(nd2[0])<0.1 and abs(nd2[1])<0.1 and abs(nd2[2])>0.9: #jeśli tylko składowa C wektora normalnego ma wartość bliską +-1, to ta płaszczyzna jest pozioma
-        print("Ta płaszczyzna jest pozioma.")
-    elif abs(nd2[2])<0.1: #jeśli składowa C jest bliska zeru, to przy dowolnych wartościach składowych A i B ta płaszczyzna jest pionowa
-        print("Ta płaszczyzna jest pionowa.")
-print("")
-
-print("Analiza 3. klastra...")
-nd3,nb3,czy3,_,_ = ransac(k3Punkty,200,0.1,0.7*len(k3Punkty))
-print("Klaster nr 3:")
-print("Wektor normalny: " + str(nd3))
-print("Czy to płaszczyzna: " + czy3)
-if czy3 =="tak":
-    print("Średnia odległość punktu od płaszczyzny: " + str(nb3))
-    if abs(nd3[0])<0.1 and abs(nd3[1])<0.1 and abs(nd3[2])>0.9: #jeśli tylko składowa C wektora normalnego ma wartość bliską +-1, to ta płaszczyzna jest pozioma
-        print("Ta płaszczyzna jest pozioma.")
-    elif abs(nd3[2])<0.1: #jeśli składowa C jest bliska zeru, to przy dowolnych wartościach składowych A i B ta płaszczyzna jest pionowa
-        print("Ta płaszczyzna jest pionowa.")
+    print("")
