@@ -8,6 +8,7 @@ import os
 import math
 import pandas as pd
 
+print("Skrypt realizujący zadanie 4. Autor: 259135")
 
 #funkcja wycinająca próbki tekstur:
 # zdjęcie - tablica ndarray z odczytaną teksturą,
@@ -24,7 +25,7 @@ def utwórzPróbki(zdjęcie, bok, maxIlośćPróbek, ścieżka):
             numerPróbki = j+ilośćY*i #określ numer próbki
             #print(str(i) + ", " + str(j))
             temp = zdjęcie[i*bok:(i+1)*bok,j*bok:(j+1)*bok] #wytnij próbkę
-            #skimage.io.imsave(ścieżka + "probka" + str(numerPróbki) + ".jpg", temp) #zapisz próbkę pod nazwą zawierającą jej numer
+            skimage.io.imsave(ścieżka + "probka" + str(numerPróbki) + ".jpg", temp) #zapisz próbkę pod nazwą zawierającą jej numer
             if numerPróbki+1 >= maxIlośćPróbek: # jeśli przekroczono maks. ilość próbek, przerwij wiersz
                 break
         if numerPróbki + 1 >= maxIlośćPróbek: # i przerwij kolumny
@@ -32,6 +33,7 @@ def utwórzPróbki(zdjęcie, bok, maxIlośćPróbek, ścieżka):
 
 listaTekstur = ["mebel", "gres", "tynk"]
 
+print("Tworzenie próbek...")
 #tworzenie próbek dla trzech tekstur
 for s in listaTekstur:
     tekstura = skimage.io.imread(listaTekstur[0] + "/" + listaTekstur[0] + ".jpg") #odczyt tekstury
@@ -47,6 +49,7 @@ plik = open("dane.csv", 'w')
 #zapis nagłówka
 plik.write("dis_1_0,dis_1_45,dis_1_90,dis_1_135,dis_3_0,dis_3_45,dis_3_90,dis_3_135,dis_5_0,dis_5_45,dis_5_90,dis_5_135,cor_1_0,cor_1_45,cor_1_90,cor_1_135,cor_3_0,cor_3_45,cor_3_90,cor_3_135,cor_5_0,cor_5_45,cor_5_90,cor_5_135,cont_1_0,cont_1_45,cont_1_90,cont_1_135,cont_3_0,cont_3_45,cont_3_90,cont_3_135,cont_5_0,cont_5_45,cont_5_90,cont_5_135,ene_1_0,ene_1_45,ene_1_90,ene_1_135,ene_3_0,ene_3_45,ene_3_90,ene_3_135,ene_5_0,ene_5_45,ene_5_90,ene_5_135,hom_1_0,hom_1_45,hom_1_90,hom_1_135,hom_3_0,hom_3_45,hom_3_90,hom_3_135,hom_5_0,hom_5_45,hom_5_90,hom_5_135,ASM_1_0,ASM_1_45,ASM_1_90,ASM_1_135,ASM_3_0,ASM_3_45,ASM_3_90,ASM_3_135,ASM_5_0,ASM_5_45,ASM_5_90,ASM_5_135,klasa\n")
 
+print("Obliczanie cech próbek...")
 #obliczanie cech
 for t in listaTekstur:#dla każdej tekstury
     for n in range(len(os.listdir(t + "/"))-1):#dla każdej próbki
@@ -66,6 +69,7 @@ for t in listaTekstur:#dla każdej tekstury
 #zamknij plik
 plik.close()
 
+print("Klasyfikacja próbek...")
 #odczytaj uprzednio wygenerowany plik
 wektory = pd.read_csv("dane.csv", sep=',')
 
@@ -90,9 +94,10 @@ y_pred = klasyfikator.predict(x_test)
 
 #obliczenie dokładności trafień
 dokładność = accuracy_score(y_test, y_pred)
-print(dokładność)
+print("Dokładność:" + str(dokładność))
 
 #macierz pomyłek - obliczenie przy pomocy modułu sklearn.metrics, w postaci znormalizowanej do 1
 cm = confusion_matrix(y_test, y_pred, normalize="true")
+print("Macierz pomyłek:")
 print(cm)
 
